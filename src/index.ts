@@ -1,4 +1,4 @@
-import express, { RequestHandler } from "express";
+import express from "express";
 import { MongoClient } from "mongodb";
 import morgan from "morgan";
 import { Client } from "pg";

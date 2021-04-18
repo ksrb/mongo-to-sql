@@ -28,7 +28,7 @@ export const duplicateAllFromMongo: CollectionAndClientCallback<Student> = (
   // Get students from mongo
   const students = await collection.find().toArray();
 
-  // Upload students
+  // Upload students to postgres
   for (const student of students) {
     try {
       await client.query("BEGIN");
