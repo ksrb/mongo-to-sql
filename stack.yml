@@ -38,9 +38,6 @@ services:
     image: dpage/pgadmin4
     container_name: pgadmin
     restart: always
-    volumes:
-      - ./servers.json:/pgadmin4/servers.json
-      - ./pgpass.txt:/pgpass
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
