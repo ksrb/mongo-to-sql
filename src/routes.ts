@@ -26,6 +26,10 @@ const routes = {
   get postgresGetAll() {
     return `${this.postgresRoute}/getAll`;
   },
+
+  get run() {
+    return "/run";
+  },
 };
 
 export default routes;

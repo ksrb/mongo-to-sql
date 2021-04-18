@@ -1,6 +1,7 @@
 import express from "express";
 import { MongoClient } from "mongodb";
 import morgan from "morgan";
+import fetch from "node-fetch";
 import { Client } from "pg";
 import {
   MONGO_INITDB_ROOT_PASSWORD,
@@ -14,6 +15,11 @@ import postgresHandlers from "./postgres";
 import routes from "./routes";
 import students from "./students";
 import { Student, WithCollectionAndClient, WithMongoCollection } from "./types";
+
+const port = 3001;
+const hostName = "localhost";
+const protocol = "http";
+const url = `${protocol}://${hostName}:${port}`;
 
 const app = express();
 app.use(morgan("tiny"));
@@ -69,10 +75,22 @@ const postgresClient = new Client({
     const postgresGetAll = withClients(postgresHandlers.getAll);
     app.get(routes.postgresGetAll, postgresGetAll);
 
-    const port = 3001;
-    app.listen(port, () =>
-      console.log(`listening on http://localhost:${port}`)
-    );
+    app.get(routes.run, async (req, res) => {
+      try {
+        await fetch(`${url}${routes.mongoDeleteAll}`);
+        await fetch(`${url}${routes.mongoUploadAll}`);
+        await fetch(`${url}${routes.postgresDeleteAll}`);
+        await fetch(`${url}${routes.postgresDuplicateAllFromMongo}`);
+        const results = await fetch(`${url}${routes.postgresGetAll}`);
+        res.status(200).send(await results.json());
+      } catch (e) {
+        res
+          .status(400)
+          .json({ message: `Fail: request failed with error ${e}` });
+      }
+    });
+
+    app.listen(port, () => console.log(`listening on ${url}`));
   } catch (e) {
     console.dir(e);
   }
