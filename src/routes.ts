@@ -1,34 +1,58 @@
+import { Route } from "./types";
+
 const routes = {
   baseRoute: "/students",
 
   get mongoRoute() {
     return `${this.baseRoute}/mongo`;
   },
-  get mongoUploadAll() {
-    return `${this.mongoRoute}/uploadAll`;
+  get mongoUploadAll(): Route {
+    return {
+      description: "Uploads all students to MongoDB",
+      path: `${this.mongoRoute}/uploadAll`,
+    };
   },
-  get mongoDeleteAll() {
-    return `${this.mongoRoute}/deleteAll`;
+  get mongoDeleteAll(): Route {
+    return {
+      description: "Deletes all students from MongoDB",
+      path: `${this.mongoRoute}/deleteAll`,
+    };
   },
-  get mongoGetAll() {
-    return `${this.mongoRoute}/getAll`;
+  get mongoGetAll(): Route {
+    return {
+      description: "Gets all students from MongoDB",
+      path: `${this.mongoRoute}/getAll`,
+    };
   },
-
   get postgresRoute() {
     return `${this.baseRoute}/postgres`;
   },
   get postgresDuplicateAllFromMongo() {
-    return `${this.postgresRoute}/duplicateAllFromMongo`;
+    return {
+      description:
+        "Gets all students from MongoDB and duplicates them into Postgres",
+      path: `${this.postgresRoute}/duplicateAllFromMongo`,
+    };
   },
-  get postgresDeleteAll() {
-    return `${this.postgresRoute}/deleteAll`;
+  get postgresDeleteAll(): Route {
+    return {
+      description: "Deletes all students from Postgres",
+      path: `${this.postgresRoute}/deleteAll`,
+    };
   },
   get postgresGetAll() {
-    return `${this.postgresRoute}/getAll`;
+    return {
+      description: "Get all students from Postgres",
+      path: `${this.postgresRoute}/getAll`,
+    };
   },
 
   get run() {
-    return "/run";
+    return {
+      description:
+        "Resets databases and uploads students to MongoDB and duplicates them from MongoDB to Postgres",
+      path: "/run",
+    };
   },
 };
 

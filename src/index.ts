@@ -1,4 +1,5 @@
 import express from "express";
+import path from "path";
 import { MongoClient } from "mongodb";
 import morgan from "morgan";
 import fetch from "node-fetch";
@@ -6,20 +7,18 @@ import { Client } from "pg";
 import {
   MONGO_INITDB_ROOT_PASSWORD,
   MONGO_INITDB_ROOT_USERNAME,
+  port,
   POSTGRES_DB,
   POSTGRES_PASSWORD,
   POSTGRES_USER,
+  url,
 } from "./config";
 import mongoHandlers from "./mongo";
+import page from "./page";
 import postgresHandlers from "./postgres";
 import routes from "./routes";
 import students from "./students";
 import { Student, WithCollectionAndClient, WithMongoCollection } from "./types";
-
-const port = 3001;
-const hostName = "localhost";
-const protocol = "http";
-const url = `${protocol}://${hostName}:${port}`;
 
 const app = express();
 app.use(morgan("tiny"));
@@ -53,35 +52,35 @@ const postgresClient = new Client({
       fn(collection, postgresClient);
 
     const mongoUploadAll = withMongoCollection(mongoHandlers.uploadAll);
-    app.get(routes.mongoUploadAll, mongoUploadAll);
+    app.get(routes.mongoUploadAll.path, mongoUploadAll);
 
     const mongoDeleteAll = withMongoCollection(mongoHandlers.deleteAll);
-    app.get(routes.mongoDeleteAll, mongoDeleteAll);
+    app.get(routes.mongoDeleteAll.path, mongoDeleteAll);
 
     const mongoGetAll = withMongoCollection(mongoHandlers.getAll);
-    app.get(routes.mongoGetAll, mongoGetAll);
+    app.get(routes.mongoGetAll.path, mongoGetAll);
 
     const postgresDuplicateAllFromMongo = withClients(
       postgresHandlers.duplicateAllFromMongo
     );
     app.get(
-      routes.postgresDuplicateAllFromMongo,
+      routes.postgresDuplicateAllFromMongo.path,
       postgresDuplicateAllFromMongo
     );
 
     const postgresDeleteAll = withClients(postgresHandlers.deleteAll);
-    app.get(routes.postgresDeleteAll, postgresDeleteAll);
+    app.get(routes.postgresDeleteAll.path, postgresDeleteAll);
 
     const postgresGetAll = withClients(postgresHandlers.getAll);
-    app.get(routes.postgresGetAll, postgresGetAll);
+    app.get(routes.postgresGetAll.path, postgresGetAll);
 
-    app.get(routes.run, async (req, res) => {
+    app.get(routes.run.path, async (req, res) => {
       try {
-        await fetch(`${url}${routes.mongoDeleteAll}`);
-        await fetch(`${url}${routes.mongoUploadAll}`);
-        await fetch(`${url}${routes.postgresDeleteAll}`);
-        await fetch(`${url}${routes.postgresDuplicateAllFromMongo}`);
-        const results = await fetch(`${url}${routes.postgresGetAll}`);
+        await fetch(`${url}${routes.mongoDeleteAll.path}`);
+        await fetch(`${url}${routes.mongoUploadAll.path}`);
+        await fetch(`${url}${routes.postgresDeleteAll.path}`);
+        await fetch(`${url}${routes.postgresDuplicateAllFromMongo.path}`);
+        const results = await fetch(`${url}${routes.postgresGetAll.path}`);
         res.status(200).send(await results.json());
       } catch (e) {
         res
@@ -90,6 +89,9 @@ const postgresClient = new Client({
       }
     });
 
+    app.get("/", async (req, res) => {
+      res.send(page);
+    });
     app.listen(port, () => console.log(`listening on ${url}`));
   } catch (e) {
     console.dir(e);

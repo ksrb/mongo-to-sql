@@ -14,3 +14,8 @@ export const {
     PGADMIN_DEFAULT_PASSWORD,
   },
 } = process;
+
+export const port = 3001;
+export const hostName = "localhost";
+export const protocol = "http";
+export const url = `${protocol}://${hostName}:${port}`;

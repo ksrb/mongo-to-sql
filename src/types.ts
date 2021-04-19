@@ -31,3 +31,8 @@ export type CollectionAndClientCallback<T> = (
 export type WithCollectionAndClient<T> = (
   fn: CollectionAndClientCallback<ExtractCollectionType<T>>
 ) => ReturnType<typeof fn>;
+
+export type Route = {
+  description: string;
+  path: string;
+};
