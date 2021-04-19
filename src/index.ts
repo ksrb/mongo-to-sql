@@ -50,29 +50,29 @@ const postgresClient = new Client({
     const withClients: WithCollectionAndClient<typeof collection> = (fn) =>
       fn(collection, postgresClient);
 
-    const mongoUploadAll = withMongoCollection(mongoHandlers.uploadAll);
-    app.get(routes.mongoUploadAll.path, mongoUploadAll);
-
-    const mongoDeleteAll = withMongoCollection(mongoHandlers.deleteAll);
-    app.get(routes.mongoDeleteAll.path, mongoDeleteAll);
-
-    const mongoGetAll = withMongoCollection(mongoHandlers.getAll);
-    app.get(routes.mongoGetAll.path, mongoGetAll);
-
-    const postgresDuplicateAllFromMongo = withClients(
-      postgresHandlers.duplicateAllFromMongo
+    // Mongo routes
+    app.get(
+      routes.mongoUploadAll.path,
+      withMongoCollection(mongoHandlers.uploadAll)
     );
     app.get(
-      routes.postgresDuplicateAllFromMongo.path,
-      postgresDuplicateAllFromMongo
+      routes.mongoDeleteAll.path,
+      withMongoCollection(mongoHandlers.deleteAll)
     );
+    app.get(routes.mongoGetAll.path, withMongoCollection(mongoHandlers.getAll));
 
-    const postgresDeleteAll = withClients(postgresHandlers.deleteAll);
-    app.get(routes.postgresDeleteAll.path, postgresDeleteAll);
+    // Postgres routes
+    app.get(
+      routes.postgresDuplicateAllFromMongo.path,
+      withClients(postgresHandlers.duplicateAllFromMongo)
+    );
+    app.get(
+      routes.postgresDeleteAll.path,
+      withClients(postgresHandlers.deleteAll)
+    );
+    app.get(routes.postgresGetAll.path, withClients(postgresHandlers.getAll));
 
-    const postgresGetAll = withClients(postgresHandlers.getAll);
-    app.get(routes.postgresGetAll.path, postgresGetAll);
-
+    // Other routes
     app.get(routes.run.path, async (req, res) => {
       try {
         await fetch(`${url}${routes.mongoDeleteAll.path}`);
@@ -87,7 +87,6 @@ const postgresClient = new Client({
           .json({ message: `Fail: request failed with error ${e}` });
       }
     });
-
     app.get("/", async (req, res) => {
       res.send(page);
     });
