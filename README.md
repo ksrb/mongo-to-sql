@@ -10,7 +10,7 @@ npm start
 
 Go to http://localhost:3001
 
-![demo](./demo.png)
+![demo](./demo.gif)
 
 ## TODO
 - [ ] Add node server to docker compose
