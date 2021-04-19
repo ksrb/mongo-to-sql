@@ -11,7 +11,7 @@ const uploadAll: CollectionCallback<Student> = (collection) => async (
       await collection.updateOne({ _id }, { $set: student }, { upsert: true });
     } catch (e) {
       // Failed to upload student
-      res.status(400).json({
+      res.status(500).json({
         message: `Fail: student with id: ${_id} failed to upload with error ${e}`,
       });
       return;
@@ -30,7 +30,7 @@ const deleteAll: CollectionCallback<Student> = (collection) => async (
     try {
       await collection.deleteOne({ _id });
     } catch (e) {
-      res.status(400).json({
+      res.status(500).json({
         message: `Fail: student with id: ${_id} failed to delete with error ${e}`,
       });
       return;
@@ -49,7 +49,7 @@ const getAll: CollectionCallback<Student> = (collection) => async (
     const students = await collection.find().toArray();
     res.json(students);
   } catch (e) {
-    res.status(400).json({
+    res.status(500).json({
       message: `Fail: request for students with error ${e}`,
     });
     return;

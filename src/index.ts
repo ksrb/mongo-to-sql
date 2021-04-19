@@ -1,5 +1,4 @@
 import express from "express";
-import path from "path";
 import { MongoClient } from "mongodb";
 import morgan from "morgan";
 import fetch from "node-fetch";
@@ -84,7 +83,7 @@ const postgresClient = new Client({
         res.status(200).send(await results.json());
       } catch (e) {
         res
-          .status(400)
+          .status(500)
           .json({ message: `Fail: request failed with error ${e}` });
       }
     });

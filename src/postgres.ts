@@ -66,7 +66,7 @@ export const duplicateAllFromMongo: CollectionAndClientCallback<Student> = (
       await client.query("COMMIT");
     } catch (e) {
       await client.query("ROLLBACK");
-      res.status(400).json({
+      res.status(500).json({
         message: `Fail: student with id: ${student._id} failed to duplicate with error: ${e}`,
       });
       return;
@@ -84,7 +84,7 @@ const getAll: CollectionAndClientCallback<Student> = (
     const { rows } = await client.query("SELECT * FROM students;");
     res.json(rows);
   } catch (e) {
-    res.status(400).json({
+    res.status(500).json({
       message: `Fail: request for students failed with error: ${e}`,
     });
     return;
@@ -102,7 +102,7 @@ const deleteAll: CollectionAndClientCallback<Student> = (
     res.json({ message: "Success: student table dropped" });
   } catch (e) {
     await client.query("ROLLBACK");
-    res.status(400).json({
+    res.status(500).json({
       message: `Fail: drop student table failed with error ${e}`,
     });
     return;
