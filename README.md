@@ -13,6 +13,7 @@ Go to http://localhost:3001
 ![demo](./demo.png)
 
 ## TODO
+- [ ] Add node server to docker compose
 - [ ] Unit test
 - [ ] Integration test
 - [ ] Make it fancy
