@@ -25,7 +25,10 @@ function renderButton({ path }: Route) {
 
 function renderRoute(route: Route) {
   const { description } = route;
-  return `<li>${renderButton(route)} - ${description}</li>`;
+  return `<tr>
+<td class="table_leftCol">${renderButton(route)}</td>
+<td>${description}</td>
+</tr>`;
 }
 
 const page = `
@@ -35,6 +38,11 @@ const page = `
   <meta charset="UTF-8">
   <title>mongo-to-sql</title>
   <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+  <style>
+    .table_leftCol {
+      white-space: nowrap;
+    }
+  </style>
 </head>
 <body>
 <div><strong>Preface</strong></div>
@@ -45,19 +53,19 @@ effort.
 </p>
 
 <div><strong>Test endpoint</strong></div>
-<ul>
+<table>
 ${renderRoute(routes.run)}
-</ul>
+</table>
 
 <div><strong>Mongo endpoints</strong></div>
-<ul>
+<table>
 ${mongoRoutes.map((route) => renderRoute(route)).join("")}
-</ul>
+</table>
 
 <div><strong>Postgres endpoints</strong></div>
-<ul>
+<table>
 ${postgresRoutes.map((route) => renderRoute(route)).join("")}
-</ul>
+</table>
 
 <div><strong>Response</strong></div>
 <pre id="response">Click something above</pre>
@@ -66,9 +74,7 @@ ${postgresRoutes.map((route) => renderRoute(route)).join("")}
 Verify results using clients
 <ul>
  <li><a href="http://localhost:8081">Mongo-express</a></li>
- <li>
- <a href="http://localhost:5050">PgAdmin</a> - PgAdmin requires a bit more work
- to access as there wasn't easy way to pre-configure it
+ <li><a href="http://localhost:5050">PgAdmin</a>
   <ul>
     <li>Username: ${PGADMIN_DEFAULT_EMAIL}</li>
     <li>Password: ${PGADMIN_DEFAULT_PASSWORD}</li>
